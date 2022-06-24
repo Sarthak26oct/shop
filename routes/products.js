@@ -5,6 +5,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require("multer");
 const csvtojson = require("csvtojson");
+const nodemailer = require("nodemailer");
 
 router.get(`/`, async (req, res) => {
   let filter = {};
@@ -42,9 +43,9 @@ router.post(`/`, async (req, res) => {
     price: req.body.price,
     category: req.body.category,
     countInStock: req.body.countInStock,
-    rating: req.body.rating,
-    numReviews: req.body.numReviews,
-    isFeatured: req.body.isFeatured,
+    // rating: req.body.rating,
+    // numReviews: req.body.numReviews,
+    // isFeatured: req.body.isFeatured,
   });
 
   product = await product.save();
@@ -54,7 +55,7 @@ router.post(`/`, async (req, res) => {
   res.send(product);
 });
 
-const upload = multer({ dest: "./public/uploads/" });
+const upload = multer({ dest: "./public/uploads/csv" });
 
 router.post("/csv", upload.single("file"), function (req, res) {
   const file = req.file;
@@ -72,6 +73,26 @@ router.post("/csv", upload.single("file"), function (req, res) {
           console.log(error);
         });
     });
+});
+
+router.post("/email", async (req, res) => {
+  let transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false,
+    auth: {
+      user: "jayde.macejkovic97@ethereal.email",
+      pass: "PFB4cbuSZ3WYk4u5Rd",
+    },
+  });
+
+  let info = await transporter.sendMail({
+    from: "Eshop@shop.com",
+    to: "admin@admin.com",
+    subject: "Product Stock",
+    text: `Your product's stock is less than 10. Please check and update.`,
+    // html: `<b>Your ${detail.name} product's stock left ${detail.count}. Please check and update.</b>`,
+  });
 });
 
 router.put("/:id", async (req, res) => {
@@ -92,9 +113,9 @@ router.put("/:id", async (req, res) => {
       price: req.body.price,
       category: req.body.category,
       countInStock: req.body.countInStock,
-      rating: req.body.rating,
-      numReviews: req.body.numReviews,
-      isFeatured: req.body.isFeatured,
+      // rating: req.body.rating,
+      // numReviews: req.body.numReviews,
+      // isFeatured: req.body.isFeatured,
     },
     { new: true }
   );

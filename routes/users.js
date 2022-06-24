@@ -92,7 +92,7 @@ router.post("/login", async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.status(200).send({ user: user.email, token: token });
+    res.status(200).send({ name: user.name, id: user.id, token: token });
   } else {
     res.status(400).send("password is wrong!");
   }
@@ -111,11 +111,17 @@ router.post("/register", async (req, res) => {
     city: req.body.city,
     country: req.body.country,
   });
-  user = await user.save();
 
-  if (!user) return res.status(400).send("the user cannot be created!");
+  const existedUser = await User.findOne({ email: req.body.email });
+  if (existedUser) {
+    return res.status(409).send({ message:"Email already exist" });
+  } else {
+    user = await user.save();
 
-  res.send(user);
+    if (!user) return res.status(400).send("the user cannot be created!");
+
+    res.send(user);
+  }
 });
 
 router.delete("/:id", (req, res) => {
