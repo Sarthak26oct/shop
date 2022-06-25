@@ -36,18 +36,6 @@ const productSchema = mongoose.Schema({
     min: 0,
     max: 255,
   },
-  // rating: {
-  //   type: Number,
-  //   default: 0,
-  // },
-  // numReviews: {
-  //   type: Number,
-  //   default: 0,
-  // },
-  // isFeatured: {
-  //   type: Boolean,
-  //   default: false,
-  // },
   dateCreated: {
     type: Date,
     default: Date.now,
