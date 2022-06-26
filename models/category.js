@@ -8,9 +8,6 @@ const categorySchema = mongoose.Schema({
   icon: {
     type: String,
   },
-  color: {
-    type: String,
-  },
 });
 
 categorySchema.virtual("id").get(function () {
